@@ -8,7 +8,8 @@ class TestEventViewSet(APITestCase):
 	def setUp(self) -> None:
 		self.url_base = 'http://localhost:8000/api/v1/'
 		self.event_1 = Event.objects.create(name='event 1', max_tickets=3, start_at='2023-03-20', end_at='2023-04-10')
-		self.ticket_1 = Ticket.objects.create(events=self.event_1)
+		self.event_2 = Event.objects.create(name='event 2', max_tickets=100, start_at='2023-03-20', end_at='2023-04-10')
+		self.ticket_1 = Ticket.objects.create(events=self.event_1, redeemed=True)
 		self.ticket_2 = Ticket.objects.create(events=self.event_1)
 
 	def test_create_event_error(self):
@@ -33,5 +34,18 @@ class TestEventViewSet(APITestCase):
 			'end_at': '2023-01-30'
 		}
 		response = self.client.put(url, data=data)
-		print(response.data)
+		# print(response.data)
 		self.assertEqual(response.status_code, 400)
+
+
+	def test_destroy_event_error(self):
+		url = f'{self.url_base}events/{self.event_2.id}/'
+		response = self.client.delete(url)
+		# print(response.data)
+		self.assertEqual(response.status_code, 400)
+
+	def test_retrieve_event(self):
+		url = f'{self.url_base}events/{self.event_2.id}/'
+		response = self.client.get(url)
+		print(response.data)
+		self.assertEqual(response.status_code, 200)
