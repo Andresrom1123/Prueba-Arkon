@@ -27,9 +27,12 @@ class RedeemedTicketView(APIView):
 
 	def post(self, request, ticket_id, format=None):
 		ticket = self.get_object(ticket_id)
-		serializer = RedeemedTicketSerializer(data=request.data)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-		return Response(serializer.data, status=status.	HTTP_404_BAD_REQUEST)
+		if not ticket.redeemed:
+			ticket.redeemed = True
+			ticket.save()
+
+			return Response({'success': 'se ha canjeado el boleto'}, status=status.HTTP_200_OK)
+
+		
+		return Response({'error': 'el boleto ya se ha canjeado'}, status=status.HTTP_400_BAD_REQUEST)

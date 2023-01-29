@@ -62,9 +62,10 @@ class EventViewSet(viewsets.ModelViewSet):
 
 		data = {
 			'name': serializer.data['name'],
-			'max_tickets': serializer.data['max_tickets'],
 			'start_at': serializer.data['start_at'],
 			'end_at': serializer.data['end_at'],
+			"max_tickets": serializer.data['max_tickets'],
+			'available_tickets': serializer.data['max_tickets'] - len(sell_tickets),
 			'sell_tickets': len(sell_tickets),
 			'redeemed_tickets': len(redeemed_tickets)
 		}

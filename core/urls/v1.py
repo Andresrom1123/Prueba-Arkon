@@ -9,6 +9,6 @@ router.register(r'events', EventViewSet)
 
 urlpatterns = [
 	path('', include(router.urls)),
-	path('tickets', views.CreateTicketView.as_view()),
-	path('tickets/<slug:ticket_id>', views.RedeemedTicketView.as_view()),
+	path('tickets/', views.CreateTicketView.as_view()),
+	path('tickets/<slug:ticket_id>/', views.RedeemedTicketView.as_view()),
 ]
