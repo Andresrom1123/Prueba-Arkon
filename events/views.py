@@ -7,7 +7,7 @@ from rest_framework import status
 
 from events.models import Event
 from tickets.models import Ticket
-from events.serializers import EventSerializer, EventCreateUpdateSerializer
+from events.serializers import EventRetrieveSerializer, EventCreateUpdateSerializer
 
 
 class EventViewSet(viewsets.ModelViewSet):
@@ -20,16 +20,17 @@ class EventViewSet(viewsets.ModelViewSet):
 		Crea un nuevo evento.
 	update:
 		Actualiza un evento.
-
+	destroy:
+		Borra un evento
 	"""
 	queryset = Event.objects.all()
-	serializer_class = EventSerializer
+	serializer_class = EventRetrieveSerializer
 
 	def get_serializer_class(self):
 		if self.action == "create" or self.action == "update":
 			return EventCreateUpdateSerializer
 		else:
-			return EventSerializer
+			return EventRetrieveSerializer
 
 
 	def destroy(self, request, pk=None):
@@ -44,10 +45,10 @@ class EventViewSet(viewsets.ModelViewSet):
 			not end_at_year < now_year  or
 			not end_at_day < now_day  and not end_at_month <= now_month
 		):
-			return Response({'error': 'No puedes borrar un evento si aun no ha pasado la fecha final'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'error': 'You cannot delete an event if the end date has not yet passed'}, status=status.HTTP_400_BAD_REQUEST)
 
 		if len(tickets_event) > 0:
-			return Response({'error': 'No puedes borrar un evento con boletos vendidos'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'error': 'You cannot delete a ticketed event'}, status=status.HTTP_400_BAD_REQUEST)
 
 		event.delete()
 
@@ -55,7 +56,7 @@ class EventViewSet(viewsets.ModelViewSet):
 
 	def retrieve(self, request, pk=None):
 		event = get_object_or_404(Event.objects.all(), pk=pk)
-		serializer = EventSerializer(event)
+		serializer = EventRetrieveSerializer(event)
 
 		sell_tickets = Ticket.objects.filter(events__id=pk)
 		redeemed_tickets = Ticket.objects.filter(Q(events__id=pk) & Q(redeemed=True))

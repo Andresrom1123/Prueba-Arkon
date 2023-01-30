@@ -21,13 +21,13 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 			start_at_year < now_year or
 			start_at_month <= now_month and start_at_day < now_day
 		):
-			raise serializers.ValidationError("La fecha de inicio no debe ser menor a la de hoy")
+			raise serializers.ValidationError("Start date must not be less than today")
 
 		if (
 			end_at_year < start_at_year or
 			end_at_day < start_at_day and end_at_month <= now_month
 		):
-			raise serializers.ValidationError("La fecha de fin no debe ser menor a la de incio")
+			raise serializers.ValidationError("The end date must not be less than the start date")
 
 
 		return data
@@ -36,7 +36,7 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 		tickets_event = Ticket.objects.filter(events__id=instance.id)
 
 		if (len(tickets_event) > validate_data.get('max_tickets')):
-			raise serializers.ValidationError('El maximo de boletos no debe ser menor a la cantidad de boletos vendidos')
+			raise serializers.ValidationError('The maximum number of tickets must not be less than the number of tickets sold')
 
 		instance.name = validate_data.get('name', instance.name)
 		instance.max_tickets = validate_data.get('max_tickets', instance.max_tickets)
@@ -45,7 +45,7 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 		instance.save()
 		return instance
 
-class EventSerializer(serializers.ModelSerializer):
+class EventRetrieveSerializer(serializers.ModelSerializer):
 
 	class Meta:
 		model = Event

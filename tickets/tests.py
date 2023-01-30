@@ -21,7 +21,7 @@ class TestTicketView(APITestCase):
 
 
 	def test_redeemed_ticket_error(self):
-		url = f'{self.url_base}tickets/{self.ticket_1.id}/'
+		url = f'{self.url_base}tickets/redeemed/{self.ticket_1.id}/'
 		response = self.client.post(url)
 		self.assertEqual(response.status_code, 400)
 
