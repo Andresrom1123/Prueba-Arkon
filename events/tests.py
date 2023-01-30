@@ -47,5 +47,5 @@ class TestEventViewSet(APITestCase):
 	def test_retrieve_event(self):
 		url = f'{self.url_base}events/{self.event_2.id}/'
 		response = self.client.get(url)
-		print(response.data)
+		# print(response.data)
 		self.assertEqual(response.status_code, 200)

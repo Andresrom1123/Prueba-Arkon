@@ -36,7 +36,7 @@ class EventCreateUpdateSerializer(serializers.ModelSerializer):
 		tickets_event = Ticket.objects.filter(events__id=instance.id)
 
 		if (len(tickets_event) > validate_data.get('max_tickets')):
-			raise serializers.ValidationError('La cantidad de tickets vendidos del evento no debe ser mayor al maximo de boletos')
+			raise serializers.ValidationError('El maximo de boletos no debe ser menor a la cantidad de boletos vendidos')
 
 		instance.name = validate_data.get('name', instance.name)
 		instance.max_tickets = validate_data.get('max_tickets', instance.max_tickets)

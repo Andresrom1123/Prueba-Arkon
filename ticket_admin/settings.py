@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'ticket_admin.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'ticket_admin_db',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '127.0.01',
+        'PORT': '5432',
     }
 }
 

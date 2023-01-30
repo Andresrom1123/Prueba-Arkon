@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.http import Http404
 
-from .serializers import CreateTicketSerializer, RedeemedTicketSerializer
+from .serializers import CreateTicketSerializer
 from .models import Ticket
 
 
@@ -16,7 +16,7 @@ class CreateTicketView(APIView):
 			serializer.save()
 			return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-		return Response(serializer.data, status=status.	HTTP_404_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RedeemedTicketView(APIView):
 	def get_object(self, ticket_id):
