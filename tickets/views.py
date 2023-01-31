@@ -1,15 +1,18 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
+from drf_yasg.utils import swagger_auto_schema
 from django.http import Http404
 
 from .serializers import TicketCreateSerializer
 from .models import Ticket
 
 
-
-
 class CreateTicketView(APIView):
+	"""
+	Crea un boleto
+	"""
+	@swagger_auto_schema(responses={201: TicketCreateSerializer(many=True)})
 	def post(self, request, format=None):
 		serializer = TicketCreateSerializer(data=request.data)
 		if serializer.is_valid():
@@ -19,6 +22,9 @@ class CreateTicketView(APIView):
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RedeemedTicketView(APIView):
+	"""
+	Canjea un boleto
+	"""
 	def get_object(self, ticket_id):
 		try:
 			return Ticket.objects.get(id=ticket_id)
